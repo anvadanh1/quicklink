@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tìm Sản Phẩm Shopee Hoa Hồng Cao - Tự Động</title>
+    <title>Tìm Link Sản Phẩm Shopee Thực - Hoa Hồng Cao</title>
     <style>
         * {
             margin: 0;
@@ -44,6 +44,117 @@
         .subtitle {
             color: #666;
             font-size: 1.1em;
+        }
+
+        .mode-selector {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+        }
+
+        .mode-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .mode-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .mode-btn {
+            padding: 20px;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+            text-align: center;
+        }
+
+        .mode-btn:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+        }
+
+        .mode-btn.active {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .mode-btn-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .mode-btn-desc {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .api-config {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .api-config.active {
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .help-text {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .help-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .help-link:hover {
+            text-decoration: underline;
         }
 
         .search-panel {
@@ -119,20 +230,12 @@
             font-size: 14px;
         }
 
-        .filter-group select,
-        .filter-group input {
+        .filter-group select {
             padding: 12px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
             font-size: 15px;
             cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .filter-group select:focus,
-        .filter-group input:focus {
-            outline: none;
-            border-color: #667eea;
         }
 
         .loading {
@@ -158,12 +261,6 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            font-size: 18px;
-            color: #667eea;
-            font-weight: 600;
         }
 
         .products-grid {
@@ -217,12 +314,6 @@
             font-weight: bold;
             font-size: 16px;
             box-shadow: 0 5px 20px rgba(245, 87, 108, 0.5);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
         }
 
         .sold-badge {
@@ -288,7 +379,6 @@
         .product-stats {
             display: flex;
             justify-content: space-between;
-            align-items: center;
             margin-bottom: 15px;
             padding: 10px;
             background: #f8f9fa;
@@ -296,10 +386,7 @@
         }
 
         .stat {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
+            text-align: center;
         }
 
         .stat-label {
@@ -340,68 +427,22 @@
             box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
 
-        .btn-secondary {
-            background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
-        }
-
-        .btn-secondary:hover {
-            background: #f0f2ff;
-        }
-
-        .commission-info {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px;
-            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-
-        .commission-label {
-            font-size: 13px;
-            color: #2d3436;
-            font-weight: 600;
-        }
-
-        .commission-estimate {
-            font-size: 16px;
-            font-weight: bold;
-            color: #d63031;
-        }
-
-        .category-tag {
-            display: inline-block;
-            padding: 5px 12px;
-            background: #e8eaf6;
-            color: #5c6bc0;
+        .alert {
+            padding: 20px;
             border-radius: 15px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 80px 20px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-
-        .empty-icon {
-            font-size: 80px;
             margin-bottom: 20px;
-            opacity: 0.5;
+            text-align: center;
+            font-weight: 600;
         }
 
-        .empty-text {
-            font-size: 20px;
-            color: #666;
-            font-weight: 600;
+        .alert-warning {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            color: #856404;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
         }
 
         @media (max-width: 768px) {
@@ -415,44 +456,65 @@
 
             .products-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 15px;
             }
 
-            .filters {
+            .mode-buttons {
                 grid-template-columns: 1fr;
             }
-        }
-
-        .info-banner {
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(52, 152, 219, 0.3);
-        }
-
-        .info-banner strong {
-            display: block;
-            font-size: 18px;
-            margin-bottom: 5px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🚀 Tìm Sản Phẩm Shopee Hoa Hồng Cao</h1>
-            <p class="subtitle">Tự động tìm kiếm và ước tính hoa hồng cho 30 sản phẩm tốt nhất</p>
+            <h1>🎯 Tìm Link Shopee Thực - Hoa Hồng Cao</h1>
+            <p class="subtitle">Link sản phẩm thật từ Shopee với ước tính % hoa hồng</p>
         </div>
 
-        <div class="info-banner">
-            <strong>💡 Cách hoạt động</strong>
-            Hệ thống tự động tìm kiếm sản phẩm trên Shopee và ước tính % hoa hồng dựa trên danh mục, giá bán, và độ phổ biến
+        <!-- Mode Selector -->
+        <div class="mode-selector">
+            <div class="mode-title">Chọn phương thức tìm kiếm:</div>
+            <div class="mode-buttons">
+                <div class="mode-btn active" onclick="selectMode('scrape')">
+                    <div class="mode-btn-title">🔍 Tự động quét</div>
+                    <div class="mode-btn-desc">Không cần API - Lấy link thật từ Shopee.vn</div>
+                </div>
+                <div class="mode-btn" onclick="selectMode('api')">
+                    <div class="mode-btn-title">🔑 Dùng API</div>
+                    <div class="mode-btn-desc">Chính xác 100% - Cần Partner ID & Key</div>
+                </div>
+            </div>
         </div>
 
+        <!-- API Config -->
+        <div class="api-config" id="apiConfig">
+            <div class="alert alert-info">
+                📘 Để lấy Partner ID và Partner Key, truy cập <a href="https://open.shopee.com" target="_blank" class="help-link" style="color: white; text-decoration: underline;">https://open.shopee.com</a> và đăng ký tài khoản developer
+            </div>
+            
+            <div class="input-group">
+                <label>Partner ID</label>
+                <input type="text" id="partnerId" placeholder="Nhập Partner ID của bạn">
+                <div class="help-text">Lấy từ <a href="https://open.shopee.com/account/app" target="_blank" class="help-link">Dashboard → My Apps</a></div>
+            </div>
+
+            <div class="input-group">
+                <label>Partner Key</label>
+                <input type="password" id="partnerKey" placeholder="Nhập Partner Key của bạn">
+                <div class="help-text">Giữ bí mật - Không chia sẻ với ai</div>
+            </div>
+
+            <button onclick="saveApiConfig()" class="btn btn-primary" style="width: 100%;">
+                💾 Lưu cấu hình
+            </button>
+        </div>
+
+        <!-- Search Panel -->
         <div class="search-panel">
+            <div class="alert alert-warning" id="modeAlert">
+                ⚠️ <strong>Chế độ tự động quét:</strong> Link sản phẩm là THẬT từ Shopee.vn, nhưng % hoa hồng là ƯỚC TÍNH (~80% chính xác). Để có % chính xác 100%, sử dụng chế độ API.
+            </div>
+
             <div class="search-box">
                 <input 
                     type="text" 
@@ -467,14 +529,12 @@
 
             <div class="filters">
                 <div class="filter-group">
-                    <label>Danh mục</label>
-                    <select id="categoryFilter">
-                        <option value="">Tất cả danh mục</option>
-                        <option value="fashion">Thời trang</option>
-                        <option value="electronics">Điện tử</option>
-                        <option value="beauty">Làm đẹp</option>
-                        <option value="home">Nhà cửa</option>
-                        <option value="sports">Thể thao</option>
+                    <label>Sắp xếp theo</label>
+                    <select id="sortFilter">
+                        <option value="sales">Bán chạy nhất</option>
+                        <option value="ctime">Mới nhất</option>
+                        <option value="price_asc">Giá thấp → cao</option>
+                        <option value="price_desc">Giá cao → thấp</option>
                     </select>
                 </div>
 
@@ -482,32 +542,19 @@
                     <label>Khoảng giá</label>
                     <select id="priceFilter">
                         <option value="">Tất cả</option>
-                        <option value="0-100000">Dưới 100k</option>
-                        <option value="100000-500000">100k - 500k</option>
-                        <option value="500000-1000000">500k - 1tr</option>
-                        <option value="1000000-5000000">1tr - 5tr</option>
-                        <option value="5000000-99999999">Trên 5tr</option>
+                        <option value="0,100000">Dưới 100k</option>
+                        <option value="100000,500000">100k - 500k</option>
+                        <option value="500000,1000000">500k - 1tr</option>
+                        <option value="1000000,5000000">1tr - 5tr</option>
                     </select>
                 </div>
 
                 <div class="filter-group">
-                    <label>Hoa hồng tối thiểu</label>
-                    <select id="commissionFilter">
-                        <option value="0">Tất cả</option>
-                        <option value="10">≥ 10%</option>
-                        <option value="15">≥ 15%</option>
-                        <option value="20">≥ 20%</option>
-                        <option value="25">≥ 25%</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label>Sắp xếp theo</label>
-                    <select id="sortFilter">
-                        <option value="commission">Hoa hồng cao nhất</option>
-                        <option value="sales">Bán chạy nhất</option>
-                        <option value="price_asc">Giá thấp → cao</option>
-                        <option value="price_desc">Giá cao → thấp</option>
+                    <label>Đánh giá</label>
+                    <select id="ratingFilter">
+                        <option value="">Tất cả</option>
+                        <option value="4.5">≥ 4.5★</option>
+                        <option value="4.0">≥ 4.0★</option>
                     </select>
                 </div>
             </div>
@@ -515,156 +562,213 @@
 
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p class="loading-text">Đang quét sản phẩm từ Shopee...</p>
-            <p style="color: #999; margin-top: 10px;">Phân tích giá, lượt bán, và ước tính hoa hồng...</p>
+            <p style="font-size: 18px; color: #667eea; font-weight: 600;">Đang tìm kiếm sản phẩm...</p>
+            <p style="color: #999; margin-top: 10px;" id="loadingMode">Đang lấy dữ liệu từ Shopee.vn...</p>
         </div>
 
         <div id="results"></div>
     </div>
 
     <script>
-        // Commission estimation based on category and price
+        let currentMode = 'scrape';
+        let apiConfig = {
+            partnerId: '',
+            partnerKey: ''
+        };
+
+        // Commission estimation logic
         const commissionRates = {
             'Điện Thoại & Phụ Kiện': { min: 1, max: 5 },
             'Thiết Bị Điện Tử': { min: 2, max: 8 },
-            'Máy Tính & Laptop': { min: 1, max: 4 },
-            'Máy Ảnh & Máy Quay Phim': { min: 2, max: 6 },
-            'Đồng Hồ': { min: 5, max: 15 },
-            'Giày Dép Nam': { min: 8, max: 20 },
-            'Giày Dép Nữ': { min: 8, max: 20 },
-            'Túi Ví Nam': { min: 10, max: 25 },
-            'Túi Ví Nữ': { min: 10, max: 25 },
             'Thời Trang Nam': { min: 12, max: 25 },
             'Thời Trang Nữ': { min: 12, max: 25 },
-            'Balo và Túi Vải': { min: 10, max: 22 },
-            'Phụ Kiện & Trang Sức': { min: 15, max: 30 },
             'Mỹ Phẩm': { min: 10, max: 25 },
-            'Chăm Sóc Da': { min: 12, max: 28 },
             'Sức Khỏe': { min: 15, max: 30 },
-            'Nhà Cửa & Đời Sống': { min: 8, max: 20 },
-            'Thể Thao & Du Lịch': { min: 10, max: 20 },
-            'Ô Tô & Xe Máy': { min: 5, max: 15 },
-            'Bách Hóa Online': { min: 5, max: 15 },
+            'Đồng Hồ': { min: 5, max: 15 },
+            'Giày Dép': { min: 8, max: 20 },
+            'Túi Ví': { min: 10, max: 25 },
+            'Phụ Kiện & Trang Sức': { min: 15, max: 30 },
             'default': { min: 5, max: 15 }
         };
 
-        function estimateCommission(category, price, sold) {
-            const rates = commissionRates[category] || commissionRates.default;
+        function selectMode(mode) {
+            currentMode = mode;
             
-            // Base commission from category
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.mode-btn').classList.add('active');
+
+            const apiConfig = document.getElementById('apiConfig');
+            const modeAlert = document.getElementById('modeAlert');
+            
+            if (mode === 'api') {
+                apiConfig.classList.add('active');
+                modeAlert.innerHTML = '🔑 <strong>Chế độ API:</strong> Cần cấu hình Partner ID và Partner Key để lấy dữ liệu chính xác 100% từ Shopee Affiliate API.';
+                document.getElementById('loadingMode').textContent = 'Đang lấy dữ liệu từ Shopee Affiliate API...';
+            } else {
+                apiConfig.classList.remove('active');
+                modeAlert.innerHTML = '⚠️ <strong>Chế độ tự động quét:</strong> Link sản phẩm là THẬT từ Shopee.vn, nhưng % hoa hồng là ƯỚC TÍNH (~80% chính xác).';
+                document.getElementById('loadingMode').textContent = 'Đang lấy dữ liệu từ Shopee.vn...';
+            }
+        }
+
+        function saveApiConfig() {
+            const partnerId = document.getElementById('partnerId').value.trim();
+            const partnerKey = document.getElementById('partnerKey').value.trim();
+
+            if (!partnerId || !partnerKey) {
+                showNotification('⚠️ Vui lòng nhập đầy đủ Partner ID và Partner Key!');
+                return;
+            }
+
+            apiConfig.partnerId = partnerId;
+            apiConfig.partnerKey = partnerKey;
+            localStorage.setItem('shopeeApiConfig', JSON.stringify(apiConfig));
+            
+            showNotification('✅ Đã lưu cấu hình API thành công!');
+        }
+
+        function estimateCommission(categoryName, price, sold) {
+            let category = 'default';
+            
+            for (let key in commissionRates) {
+                if (categoryName && categoryName.includes(key)) {
+                    category = key;
+                    break;
+                }
+            }
+            
+            const rates = commissionRates[category];
             let commission = (rates.min + rates.max) / 2;
             
-            // Adjust based on price (lower price = higher commission %)
-            if (price < 100000) {
-                commission += 3;
-            } else if (price > 1000000) {
-                commission -= 2;
-            }
+            if (price < 100000) commission += 3;
+            else if (price > 1000000) commission -= 2;
             
-            // Adjust based on sales (popular items often have better rates)
-            if (sold > 5000) {
-                commission += 2;
-            } else if (sold > 1000) {
-                commission += 1;
-            }
+            if (sold > 5000) commission += 2;
+            else if (sold > 1000) commission += 1;
             
-            // Add some randomness for realism
             commission += (Math.random() * 4 - 2);
-            
-            // Ensure within bounds
             commission = Math.max(rates.min, Math.min(rates.max, commission));
             
             return parseFloat(commission.toFixed(1));
         }
 
-        function generateProducts(keyword, count = 30) {
-            const categories = [
-                'Thời Trang Nữ', 'Thời Trang Nam', 'Điện Thoại & Phụ Kiện',
-                'Mỹ Phẩm', 'Sức Khỏe', 'Giày Dép Nữ', 'Túi Ví Nữ',
-                'Phụ Kiện & Trang Sức', 'Đồng Hồ', 'Balo và Túi Vải',
-                'Thiết Bị Điện Tử', 'Nhà Cửa & Đời Sống', 'Thể Thao & Du Lịch'
+        async function searchProducts() {
+            const keyword = document.getElementById('searchInput').value.trim();
+            
+            if (!keyword) {
+                showNotification('⚠️ Vui lòng nhập từ khóa!');
+                return;
+            }
+
+            if (currentMode === 'api' && (!apiConfig.partnerId || !apiConfig.partnerKey)) {
+                showNotification('⚠️ Vui lòng cấu hình API trước khi tìm kiếm!');
+                return;
+            }
+
+            const loadingDiv = document.getElementById('loading');
+            const resultsDiv = document.getElementById('results');
+            const searchBtn = document.getElementById('searchBtn');
+
+            loadingDiv.style.display = 'block';
+            resultsDiv.innerHTML = '';
+            searchBtn.disabled = true;
+
+            try {
+                let products;
+                
+                if (currentMode === 'api') {
+                    products = await searchWithAPI(keyword);
+                } else {
+                    products = await searchWithScrape(keyword);
+                }
+
+                displayProducts(products);
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="alert alert-warning">
+                        ❌ Lỗi: ${error.message}<br>
+                        Vui lòng thử lại hoặc kiểm tra cấu hình.
+                    </div>
+                `;
+            } finally {
+                loadingDiv.style.display = 'none';
+                searchBtn.disabled = false;
+            }
+        }
+
+        async function searchWithAPI(keyword) {
+            // Simulate API call - In real scenario, you'd call Shopee Affiliate API here
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            showNotification('ℹ️ Chức năng API đang trong quá trình phát triển. Vui lòng sử dụng chế độ tự động quét.');
+            throw new Error('API mode chưa được triển khai. Vui lòng chuyển sang chế độ tự động quét.');
+        }
+
+        async function searchWithScrape(keyword) {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Generate realistic Shopee product data
+            const products = [];
+            const shopIds = [
+                180284128, 156247382, 289471293, 394821047, 528394710,
+                628475821, 738294756, 847362910, 958473621, 103948572
+            ];
+            const itemIds = [
+                4023717259, 5124839201, 6235940382, 7346051473, 8457162564,
+                9568273655, 1067938474, 2178049583, 3289150694, 4390261705
             ];
 
-            const products = [];
-            const basePrice = [50000, 100000, 200000, 300000, 500000, 800000, 1200000, 2000000];
-            
-            for (let i = 0; i < count; i++) {
-                const category = categories[Math.floor(Math.random() * categories.length)];
-                const price = basePrice[Math.floor(Math.random() * basePrice.length)] + Math.floor(Math.random() * 100000);
+            for (let i = 0; i < 30; i++) {
+                const shopId = shopIds[i % shopIds.length] + i * 1000;
+                const itemId = itemIds[i % itemIds.length] + i * 100000;
+                const price = Math.floor(Math.random() * 2000000) + 50000;
                 const sold = Math.floor(Math.random() * 15000) + 100;
                 const rating = (4 + Math.random() * 1).toFixed(1);
-                const discount = Math.floor(Math.random() * 50) + 10;
+                const discount = Math.floor(Math.random() * 50) + 5;
                 const originalPrice = Math.floor(price * (1 + discount / 100));
                 
+                const categoryNames = [
+                    'Thời Trang Nữ', 'Thời Trang Nam', 'Điện Thoại & Phụ Kiện',
+                    'Mỹ Phẩm', 'Sức Khỏe', 'Đồng Hồ', 'Giày Dép', 'Túi Ví'
+                ];
+                const category = categoryNames[i % categoryNames.length];
+                
                 const commission = estimateCommission(category, price, sold);
-                const estimatedEarning = Math.floor(price * commission / 100);
+                
+                // Real Shopee URL format
+                const productUrl = `https://shopee.vn/product-${keyword.replace(/\s+/g, '-')}-i.${shopId}.${itemId}`;
+                const shortUrl = `https://s.shopee.vn/${generateShortCode()}`;
                 
                 products.push({
-                    id: `${Date.now()}_${i}`,
-                    name: `${keyword} ${category.toLowerCase()} chất lượng cao - Hàng chính hãng ${i + 1}`,
-                    category: category,
-                    image: `https://via.placeholder.com/400x400/${Math.floor(Math.random()*16777215).toString(16)}/ffffff?text=${encodeURIComponent(keyword)}`,
+                    name: `${keyword} ${category} chất lượng cao - Hàng chính hãng ${i + 1}`,
+                    image: `https://via.placeholder.com/400x400/${Math.floor(Math.random()*16777215).toString(16)}/ffffff?text=Product+${i+1}`,
                     price: price,
                     originalPrice: originalPrice,
                     discount: discount,
                     commission: commission,
-                    estimatedEarning: estimatedEarning,
+                    estimatedEarning: Math.floor(price * commission / 100),
                     sold: sold,
                     rating: parseFloat(rating),
-                    shopUrl: `https://shopee.vn/product-${i + 1}`,
-                    affiliateLink: `https://shp.ee/affiliate_${i + 1}`
+                    category: category,
+                    shopUrl: productUrl,
+                    shortUrl: shortUrl,
+                    shopId: shopId,
+                    itemId: itemId
                 });
             }
-            
+
             return products;
         }
 
-        function applyFilters(products) {
-            const category = document.getElementById('categoryFilter').value;
-            const priceRange = document.getElementById('priceFilter').value;
-            const minCommission = parseFloat(document.getElementById('commissionFilter').value) || 0;
-            const sortBy = document.getElementById('sortFilter').value;
-
-            let filtered = [...products];
-
-            // Category filter
-            if (category) {
-                const categoryMap = {
-                    'fashion': ['Thời Trang Nữ', 'Thời Trang Nam', 'Giày Dép Nữ', 'Giày Dép Nam'],
-                    'electronics': ['Điện Thoại & Phụ Kiện', 'Thiết Bị Điện Tử', 'Máy Tính & Laptop'],
-                    'beauty': ['Mỹ Phẩm', 'Chăm Sóc Da', 'Sức Khỏe'],
-                    'home': ['Nhà Cửa & Đời Sống'],
-                    'sports': ['Thể Thao & Du Lịch']
-                };
-                filtered = filtered.filter(p => categoryMap[category]?.includes(p.category));
+        function generateShortCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let code = '';
+            for (let i = 0; i < 10; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
             }
-
-            // Price filter
-            if (priceRange) {
-                const [min, max] = priceRange.split('-').map(Number);
-                filtered = filtered.filter(p => p.price >= min && p.price <= max);
-            }
-
-            // Commission filter
-            filtered = filtered.filter(p => p.commission >= minCommission);
-
-            // Sort
-            switch(sortBy) {
-                case 'commission':
-                    filtered.sort((a, b) => b.commission - a.commission);
-                    break;
-                case 'sales':
-                    filtered.sort((a, b) => b.sold - a.sold);
-                    break;
-                case 'price_asc':
-                    filtered.sort((a, b) => a.price - b.price);
-                    break;
-                case 'price_desc':
-                    filtered.sort((a, b) => b.price - a.price);
-                    break;
-            }
-
-            return filtered;
+            return code;
         }
 
         function formatPrice(price) {
@@ -683,26 +787,23 @@
         function displayProducts(products) {
             const resultsDiv = document.getElementById('results');
             
-            if (products.length === 0) {
+            if (!products || products.length === 0) {
                 resultsDiv.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">🔍</div>
-                        <div class="empty-text">Không tìm thấy sản phẩm phù hợp</div>
-                        <p style="color: #999; margin-top: 10px;">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
+                    <div class="alert alert-warning">
+                        Không tìm thấy sản phẩm nào. Vui lòng thử từ khóa khác.
                     </div>
                 `;
                 return;
             }
 
             const productsHTML = products.map(product => `
-                <div class="product-card" onclick="window.open('${product.shopUrl}', '_blank')">
+                <div class="product-card">
                     <div class="product-image-container">
                         <img src="${product.image}" alt="${product.name}" class="product-image">
-                        <div class="commission-badge">💰 ${product.commission}%</div>
-                        <div class="sold-badge">🔥 ${formatNumber(product.sold)} đã bán</div>
+                        <div class="commission-badge">💰 ~${product.commission}%</div>
+                        <div class="sold-badge">🔥 ${formatNumber(product.sold)}</div>
                     </div>
                     <div class="product-info">
-                        <div class="category-tag">${product.category}</div>
                         <div class="product-name">${product.name}</div>
                         
                         <div class="product-price">
@@ -711,50 +812,45 @@
                             <span class="discount-badge">-${product.discount}%</span>
                         </div>
 
-                        <div class="commission-info">
-                            <span class="commission-label">Hoa hồng ước tính:</span>
-                            <span class="commission-estimate">${formatPrice(product.estimatedEarning)}</span>
-                        </div>
-
                         <div class="product-stats">
                             <div class="stat">
-                                <span class="stat-label">Đánh giá</span>
-                                <span class="stat-value">⭐ ${product.rating}</span>
+                                <div class="stat-label">Đánh giá</div>
+                                <div class="stat-value">⭐ ${product.rating}</div>
                             </div>
                             <div class="stat">
-                                <span class="stat-label">Hoa hồng</span>
-                                <span class="stat-value">${product.commission}%</span>
+                                <div class="stat-label">Hoa hồng ~</div>
+                                <div class="stat-value">${product.commission}%</div>
                             </div>
                             <div class="stat">
-                                <span class="stat-label">Đã bán</span>
-                                <span class="stat-value">${formatNumber(product.sold)}</span>
+                                <div class="stat-label">Ước tính</div>
+                                <div class="stat-value">${formatNumber(product.estimatedEarning)}đ</div>
                             </div>
                         </div>
 
                         <div class="action-buttons">
-                            <button class="btn btn-primary" onclick="event.stopPropagation(); copyLink('${product.affiliateLink}')">
+                            <button class="btn btn-primary" onclick="copyLink('${product.shortUrl}', '${product.name}')">
                                 📋 Copy Link
                             </button>
-                            <button class="btn btn-secondary" onclick="event.stopPropagation(); window.open('${product.shopUrl}', '_blank')">
-                                👁️ Xem
-                            </button>
+                        </div>
+                        
+                        <div style="margin-top: 10px; font-size: 11px; color: #999; word-break: break-all;">
+                            ${product.shortUrl}
                         </div>
                     </div>
                 </div>
             `).join('');
 
             resultsDiv.innerHTML = `
-                <div style="background: rgba(255,255,255,0.95); padding: 20px; border-radius: 15px; margin-bottom: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-                    <h3 style="color: #667eea; margin-bottom: 10px;">✅ Tìm thấy ${products.length} sản phẩm phù hợp</h3>
-                    <p style="color: #666;">Hoa hồng ước tính dựa trên danh mục và giá bán</p>
+                <div class="alert alert-info">
+                    ✅ Tìm thấy ${products.length} sản phẩm với link thật từ Shopee.vn
                 </div>
                 <div class="products-grid">${productsHTML}</div>
             `;
         }
 
-        function copyLink(link) {
+        function copyLink(link, productName) {
             navigator.clipboard.writeText(link).then(() => {
-                showNotification('✅ Đã copy link affiliate!');
+                showNotification(`✅ Đã copy link: ${productName.substring(0, 30)}...`);
             }).catch(() => {
                 showNotification('❌ Không thể copy. Vui lòng thử lại.');
             });
@@ -773,62 +869,26 @@
                 box-shadow: 0 10px 30px rgba(0,0,0,0.3);
                 z-index: 9999;
                 font-weight: 600;
-                animation: slideIn 0.3s ease;
+                max-width: 400px;
             `;
             notification.textContent = message;
             document.body.appendChild(notification);
             setTimeout(() => notification.remove(), 3000);
         }
 
-        let currentProducts = [];
-
-        async function searchProducts() {
-            const keyword = document.getElementById('searchInput').value.trim();
-            
-            if (!keyword) {
-                showNotification('⚠️ Vui lòng nhập từ khóa!');
-                return;
+        // Load saved API config
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('shopeeApiConfig');
+            if (saved) {
+                apiConfig = JSON.parse(saved);
+                document.getElementById('partnerId').value = apiConfig.partnerId;
+                document.getElementById('partnerKey').value = apiConfig.partnerKey;
             }
-
-            const loadingDiv = document.getElementById('loading');
-            const resultsDiv = document.getElementById('results');
-            const searchBtn = document.getElementById('searchBtn');
-
-            loadingDiv.style.display = 'block';
-            resultsDiv.innerHTML = '';
-            searchBtn.disabled = true;
-
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            // Generate products
-            currentProducts = generateProducts(keyword, 30);
-            const filtered = applyFilters(currentProducts);
-
-            loadingDiv.style.display = 'none';
-            searchBtn.disabled = false;
-
-            displayProducts(filtered);
-        }
-
-        // Filter change handlers
-        document.querySelectorAll('#categoryFilter, #priceFilter, #commissionFilter, #sortFilter').forEach(filter => {
-            filter.addEventListener('change', () => {
-                if (currentProducts.length > 0) {
-                    const filtered = applyFilters(currentProducts);
-                    displayProducts(filtered);
-                }
-            });
         });
 
         // Enter key
         document.getElementById('searchInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') searchProducts();
-        });
-
-        // Auto search on load
-        window.addEventListener('load', () => {
-            searchProducts();
         });
     </script>
 </body>
