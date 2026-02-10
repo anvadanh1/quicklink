@@ -599,30 +599,83 @@
             resultsDiv.innerHTML = html;
         }
 
-        function downloadSingle(url, filename) {
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${filename}.mp4`;
-            a.target = '_blank';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+        async function downloadSingle(url, filename) {
+            try {
+                // Fetch video và tạo blob để force download
+                const response = await fetch(url);
+                const blob = await response.blob();
+                
+                const blobUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = blobUrl;
+                a.download = `${filename}.mp4`;
+                
+                document.body.appendChild(a);
+                a.click();
+                
+                // Cleanup
+                setTimeout(() => {
+                    window.URL.revokeObjectURL(blobUrl);
+                    document.body.removeChild(a);
+                }, 100);
+                
+                return true;
+            } catch (error) {
+                console.error('Download error:', error);
+                // Fallback: direct link
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${filename}.mp4`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                return false;
+            }
         }
 
         async function downloadAll() {
-            showStatus('Đang tải tất cả video...', 'success');
+            if (videoResults.length === 0) {
+                showStatus('Không có video nào để tải!', 'error');
+                return;
+            }
+
+            const confirmed = confirm(`Bạn muốn tải ${videoResults.length} video?\n\nLưu ý: Trình duyệt có thể yêu cầu cho phép tải nhiều file.`);
+            if (!confirmed) return;
+
+            showStatus('Đang tải tất cả video... Vui lòng đợi!', 'success');
+            
+            let successCount = 0;
+            let failCount = 0;
             
             for (let i = 0; i < videoResults.length; i++) {
                 const video = videoResults[i];
-                downloadSingle(video.downloadUrl, sanitizeFilename(video.title));
+                const filename = sanitizeFilename(video.title) || `tiktok_video_${i+1}`;
                 
-                // Delay giữa các downloads
+                showStatus(`Đang tải video ${i + 1}/${videoResults.length}: ${video.title.substring(0, 30)}...`, 'success');
+                
+                try {
+                    const success = await downloadSingle(video.downloadUrl, filename);
+                    if (success) successCount++;
+                    else failCount++;
+                } catch (error) {
+                    failCount++;
+                    console.error(`Error downloading video ${i + 1}:`, error);
+                }
+                
+                // Delay giữa các downloads để tránh bị block
                 if (i < videoResults.length - 1) {
-                    await new Promise(resolve => setTimeout(resolve, 500));
+                    await new Promise(resolve => setTimeout(resolve, 1500));
                 }
             }
             
-            showStatus(`✅ Đã bắt đầu tải ${videoResults.length} video!`, 'success');
+            showStatus(`✅ Hoàn thành! Đã tải: ${successCount}/${videoResults.length} video`, 'success');
+            
+            if (failCount > 0) {
+                setTimeout(() => {
+                    showStatus(`⚠️ ${failCount} video không tải được. Hãy thử tải riêng lẻ!`, 'error');
+                }, 3000);
+            }
         }
 
         function sanitizeFilename(filename) {
