@@ -1,727 +1,649 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TikTok Batch Downloader - Tải Video HD Không Watermark</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cẩm Nang Lữ Khách — Hướng Dẫn Server</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment: #EAE0C4;
+    --parchment-dark: #DBC79E;
+    --parchment-shadow: #b9a273;
+    --ink: #2A2018;
+    --ink-soft: #5C4A36;
+    --wood: #6B4226;
+    --wood-dark: #3A2412;
+    --wood-darker: #2A1A0C;
+    --ember: #C97C2C;
+    --ember-dark: #9C5A1B;
+    --forest: #3E4F35;
+    --forest-dark: #2A3623;
+    --nether: #7A2E1D;
+    --nether-dark: #58200F;
+    --end-purple: #4A2F63;
+    --end-dark: #2E1D3E;
+    --gold: #B8912F;
+  }
 
-        :root {
-            --primary: #00f2ea;
-            --secondary: #ff0050;
-            --dark: #0a0a0a;
-            --dark-2: #1a1a1a;
-            --dark-3: #2a2a2a;
-            --text: #ffffff;
-            --text-dim: #a0a0a0;
-            --success: #00ff88;
-            --error: #ff3366;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-        }
+  * { box-sizing: border-box; }
 
-        body {
-            font-family: 'Work Sans', sans-serif;
-            background: var(--dark);
-            color: var(--text);
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-        }
+  html { scroll-behavior: smooth; }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 20%, rgba(0, 242, 234, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 0, 80, 0.15) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
+  body{
+    margin:0;
+    background: var(--parchment);
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(107,66,38,0.06), transparent 40%),
+      radial-gradient(circle at 80% 60%, rgba(107,66,38,0.05), transparent 45%);
+    color: var(--ink);
+    font-family: 'Crimson Pro', serif;
+    font-size: 18px;
+    line-height: 1.6;
+  }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 3rem 2rem;
-            position: relative;
-            z-index: 1;
-        }
+  h1,h2,h3,.display{
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.02em;
+    color: var(--wood-dark);
+    margin: 0;
+  }
 
-        header {
-            text-align: center;
-            margin-bottom: 4rem;
-            animation: fadeInDown 0.8s ease-out;
-        }
+  code, .mono{
+    font-family: 'JetBrains Mono', monospace;
+  }
 
-        h1 {
-            font-family: 'Outfit', sans-serif;
-            font-size: clamp(2.5rem, 6vw, 4rem);
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-            letter-spacing: -0.02em;
-        }
+  a { color: var(--ember-dark); }
 
-        .subtitle {
-            font-size: 1.1rem;
-            color: var(--text-dim);
-            font-weight: 400;
-        }
+  /* ===== LAYOUT ===== */
+  .frame{
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: 100vh;
+  }
 
-        .main-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-            animation: fadeInUp 0.8s ease-out 0.2s both;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-        }
+  /* ===== SIDE NAV (hanging signboard) ===== */
+  .nav{
+    background: linear-gradient(180deg, var(--wood-dark), var(--wood-darker));
+    padding: 32px 0 32px 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    border-right: 6px solid var(--wood-darker);
+    box-shadow: inset -8px 0 16px rgba(0,0,0,0.35);
+  }
 
-        .input-section {
-            margin-bottom: 2rem;
-        }
+  .nav-brand{
+    padding: 0 24px 24px 24px;
+    border-bottom: 2px solid rgba(184,145,47,0.25);
+    margin-bottom: 20px;
+  }
 
-        label {
-            display: block;
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            color: var(--text);
-        }
+  .nav-brand .display{
+    color: var(--gold);
+    font-size: 1.3rem;
+    line-height: 1.3;
+  }
 
-        textarea {
-            width: 100%;
-            min-height: 200px;
-            background: var(--dark-2);
-            border: 2px solid var(--dark-3);
-            border-radius: 16px;
-            padding: 1.25rem;
-            color: var(--text);
-            font-family: 'Work Sans', monospace;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            resize: vertical;
-            transition: all 0.3s ease;
-        }
+  .nav-brand .sub{
+    color: #cbb98a;
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 6px;
+    font-family: 'Crimson Pro', serif;
+    opacity: 0.75;
+  }
 
-        textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(0, 242, 234, 0.1);
-        }
+  .nav ul{
+    list-style: none;
+    padding: 0 12px;
+    margin: 0;
+  }
 
-        textarea::placeholder {
-            color: var(--text-dim);
-        }
+  .nav li a{
+    display: block;
+    padding: 10px 14px;
+    margin-bottom: 2px;
+    color: #d8c7a0;
+    text-decoration: none;
+    font-size: 0.92rem;
+    border-radius: 3px;
+    border-left: 3px solid transparent;
+    transition: all 0.15s ease;
+  }
 
-        .btn-group {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
+  .nav li a:hover{
+    background: rgba(201,124,44,0.15);
+    border-left-color: var(--ember);
+    color: var(--gold);
+  }
 
-        .btn {
-            flex: 1;
-            min-width: 200px;
-            padding: 1.25rem 2rem;
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
+  .nav .tag{
+    display:inline-block;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    opacity: 0.55;
+    margin-right: 6px;
+  }
 
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
+  /* ===== MAIN CONTENT ===== */
+  main{ padding: 0; }
 
-        .btn:hover::before {
-            opacity: 1;
-        }
+  .hero{
+    background:
+      linear-gradient(180deg, rgba(42,32,24,0.88), rgba(42,32,24,0.72)),
+      repeating-linear-gradient(135deg, #4a3222 0 2px, #43290f 2px 4px);
+    color: var(--parchment);
+    padding: 90px 60px 70px 60px;
+    position: relative;
+    border-bottom: 8px solid var(--wood-darker);
+  }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, #00c9c1 100%);
-            color: var(--dark);
-        }
+  .hero::after{
+    content:"";
+    position:absolute;
+    left:0; right:0; bottom:-8px;
+    height:8px;
+    background: repeating-linear-gradient(90deg, var(--gold) 0 18px, transparent 18px 36px);
+    opacity: 0.5;
+  }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 242, 234, 0.3);
-        }
+  .hero .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    color: var(--ember);
+    letter-spacing: 0.2em;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
 
-        .btn-secondary {
-            background: var(--dark-2);
-            color: var(--text);
-            border: 2px solid var(--dark-3);
-        }
+  .hero h1{
+    color: #F3E7C8;
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    font-weight: 700;
+    max-width: 14ch;
+  }
 
-        .btn-secondary:hover {
-            border-color: var(--text-dim);
-            transform: translateY(-2px);
-        }
+  .hero p.lede{
+    max-width: 58ch;
+    margin-top: 22px;
+    font-size: 1.15rem;
+    color: #d9c9a5;
+  }
 
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
-        }
+  .versions{
+    display:flex;
+    gap:16px;
+    margin-top: 34px;
+    flex-wrap: wrap;
+  }
 
-        .results {
-            margin-top: 3rem;
-            animation: fadeInUp 0.6s ease-out;
-        }
+  .version-card{
+    background: rgba(0,0,0,0.28);
+    border: 1px solid rgba(184,145,47,0.4);
+    padding: 14px 20px;
+    border-radius: 4px;
+  }
 
-        .results-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
+  .version-card .k{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
 
-        .results-title {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
+  .version-card .v{
+    font-size: 1.1rem;
+    color: #F3E7C8;
+    margin-top: 4px;
+    font-weight:600;
+  }
 
-        .download-all-btn {
-            padding: 0.75rem 1.5rem;
-            background: linear-gradient(135deg, var(--secondary) 0%, #cc0040 100%);
-            color: var(--text);
-            border: none;
-            border-radius: 8px;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+  section{
+    padding: 64px 60px;
+    border-bottom: 3px solid var(--parchment-shadow);
+    scroll-margin-top: 20px;
+  }
 
-        .download-all-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255, 0, 80, 0.3);
-        }
+  section:nth-of-type(odd){
+    background: var(--parchment-dark);
+  }
 
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap: 18px;
+    margin-bottom: 8px;
+  }
 
-        .video-card {
-            background: var(--dark-2);
-            border: 1px solid var(--dark-3);
-            border-radius: 16px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            animation: scaleIn 0.4s ease-out both;
-        }
+  .section-head .num{
+    font-family:'JetBrains Mono', monospace;
+    color: var(--ember-dark);
+    font-size: 0.95rem;
+    opacity: 0.6;
+  }
 
-        .video-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--primary);
-            box-shadow: 0 12px 30px rgba(0, 242, 234, 0.2);
-        }
+  section h2{
+    font-size: 1.8rem;
+  }
 
-        .video-thumbnail {
-            width: 100%;
-            aspect-ratio: 9/16;
-            object-fit: cover;
-            background: var(--dark-3);
-        }
+  .section-intro{
+    max-width: 70ch;
+    color: var(--ink-soft);
+    margin: 14px 0 34px 0;
+    font-size: 1.05rem;
+  }
 
-        .video-info {
-            padding: 1.25rem;
-        }
+  /* ===== command cards (chalkboard sign) ===== */
+  .cmd-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+    gap: 18px;
+  }
 
-        .video-title {
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            line-height: 1.4;
-        }
+  .cmd-card{
+    background: #241d16;
+    border-radius: 6px;
+    padding: 18px 20px;
+    border: 3px solid #4a3320;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.25), inset 0 0 30px rgba(0,0,0,0.35);
+    position: relative;
+  }
 
-        .video-meta {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            font-size: 0.85rem;
-            color: var(--text-dim);
-        }
+  .cmd-card::before{
+    content:"";
+    position:absolute;
+    top:-9px; left: 18px;
+    width: 14px; height: 14px;
+    background: radial-gradient(circle at 35% 35%, #d8b25a, #8a6a2a);
+    border-radius: 50%;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.5);
+  }
 
-        .video-author {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+  .cmd-card code{
+    display:block;
+    color: #f5e6b8;
+    font-size: 1.02rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
 
-        .download-btn {
-            width: 100%;
-            padding: 0.875rem;
-            background: var(--primary);
-            color: var(--dark);
-            border: none;
-            border-radius: 8px;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+  .cmd-card .desc{
+    color: #c9bd9e;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
 
-        .download-btn:hover {
-            background: #00c9c1;
-            transform: scale(1.02);
-        }
+  .cmd-card .desc b{ color: #e8c877; font-weight: 600; }
 
-        .loading {
-            text-align: center;
-            padding: 3rem;
-            color: var(--text-dim);
-        }
+  /* group labels within a grid */
+  .group-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ember-dark);
+    margin: 30px 0 14px 0;
+    display:flex;
+    align-items:center;
+    gap: 12px;
+  }
+  .group-label:first-child{ margin-top: 0; }
+  .group-label::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background: var(--parchment-shadow);
+  }
 
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid var(--dark-3);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
+  /* ===== warning banner (The End) ===== */
+  .warning{
+    background: linear-gradient(135deg, var(--end-dark), var(--end-purple));
+    color: #ede3f5;
+    padding: 32px 36px;
+    border-radius: 8px;
+    border: 2px solid #6b4a8a;
+    display:flex;
+    gap: 22px;
+    align-items:flex-start;
+  }
 
-        .status-message {
-            margin-top: 1rem;
-            padding: 1rem;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            animation: slideIn 0.3s ease-out;
-        }
+  .warning .glyph{
+    font-size: 2.2rem;
+    line-height: 1;
+    filter: drop-shadow(0 0 8px rgba(160,100,220,0.6));
+  }
 
-        .status-success {
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid var(--success);
-            color: var(--success);
-        }
+  .warning h3{
+    color: #f0e0ff;
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+  }
 
-        .status-error {
-            background: rgba(255, 51, 102, 0.1);
-            border: 1px solid var(--error);
-            color: var(--error);
-        }
+  .warning p{ margin: 0 0 8px 0; color: #d9c8ec; }
+  .warning ul{ margin: 8px 0 0 0; padding-left: 20px; color: #d9c8ec; }
+  .warning li{ margin-bottom: 4px; }
 
-        .footer {
-            text-align: center;
-            margin-top: 4rem;
-            padding: 2rem;
-            color: var(--text-dim);
-            font-size: 0.9rem;
-            animation: fadeIn 1s ease-out 0.6s both;
-        }
+  /* ===== build showcase (Dungeons & Taverns) ===== */
+  .build-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
+    gap: 20px;
+  }
 
-        .footer a {
-            color: var(--primary);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
+  .build-card{
+    background: var(--parchment);
+    border: 1px solid var(--parchment-shadow);
+    border-radius: 4px;
+    padding: 22px;
+    position: relative;
+  }
 
-        .footer a:hover {
-            color: var(--secondary);
-        }
+  .build-card .icon{
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+    display:block;
+  }
 
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+  .build-card h4{
+    font-family:'Cinzel', serif;
+    color: var(--wood-dark);
+    font-size: 1.05rem;
+    margin: 0 0 8px 0;
+  }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+  .build-card p{
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    margin: 0;
+  }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
+  .note-strip{
+    margin-top: 28px;
+    background: rgba(107,66,38,0.08);
+    border-left: 4px solid var(--ember);
+    padding: 16px 22px;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+  }
 
-        @keyframes scaleIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
+  .note-strip b{ color: var(--ink); }
 
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
+  /* ===== IP box ===== */
+  .ip-box{
+    background: linear-gradient(135deg, var(--wood-dark), var(--wood-darker));
+    border: 2px solid var(--gold);
+    border-radius: 6px;
+    padding: 22px 28px;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 34px;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.25);
+  }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
+  .ip-box .k{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 2rem 1rem;
-            }
+  .ip-box .v{
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #f5e6b8;
+    letter-spacing: 0.02em;
+  }
 
-            .main-card {
-                padding: 1.5rem;
-            }
+  /* ===== footer ===== */
+  footer{
+    background: var(--wood-darker);
+    color: #b8a479;
+    padding: 40px 60px;
+    text-align:center;
+    font-size: 0.85rem;
+  }
 
-            .btn-group {
-                flex-direction: column;
-            }
+  footer .display{ color: var(--gold); font-size: 1.1rem; margin-bottom: 8px; }
 
-            .btn {
-                min-width: unset;
-            }
+  /* ===== mobile ===== */
+  .nav-toggle{ display:none; }
 
-            .video-grid {
-                grid-template-columns: 1fr;
-            }
+  @media (max-width: 880px){
+    .frame{ grid-template-columns: 1fr; }
+    .nav{
+      position: sticky;
+      height: auto;
+      top: 0;
+      z-index: 20;
+      padding: 16px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .nav-brand{ display:none; }
+    .nav ul{ display:flex; gap: 6px; padding: 0; }
+    .nav li a{ white-space: nowrap; }
+    .hero, section, footer{ padding: 44px 24px; }
+  }
 
-            .results-header {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: stretch;
-            }
-        }
-    </style>
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>TikTok Downloader</h1>
-            <p class="subtitle">Tải video TikTok HD không watermark - Hàng loạt</p>
-        </header>
 
-        <div class="main-card">
-            <div class="input-section">
-                <label for="urls">Nhập link TikTok (mỗi link một dòng):</label>
-                <textarea 
-                    id="urls" 
-                    placeholder="https://www.tiktok.com/@username/video/1234567890&#10;https://vm.tiktok.com/ZMxxx&#10;https://www.tiktok.com/@username/video/0987654321"
-                ></textarea>
-            </div>
+<div class="frame">
+  <nav class="nav">
+    <div class="nav-brand">
+      <div class="display">Cẩm Nang<br>Lữ Khách</div>
+      <div class="sub">Sổ tay máy chủ</div>
+    </div>
+    <ul>
+      <li><a href="#bat-dau"><span class="tag">01</span>Bắt đầu</a></li>
+      <li><a href="#essentials"><span class="tag">02</span>Lệnh EssentialsX</a></li>
+      <li><a href="#griefprevention"><span class="tag">03</span>Lệnh GriefPrevention</a></li>
+      <li><a href="#theend"><span class="tag">04</span>Hiểm họa The End</a></li>
+      <li><a href="#ket-noi"><span class="tag">05</span>Kết nối máy chủ</a></li>
+    </ul>
+  </nav>
 
-            <div class="btn-group">
-                <button class="btn btn-primary" onclick="processVideos()">
-                    <span>🚀 Tải Video</span>
-                </button>
-                <button class="btn btn-secondary" onclick="clearAll()">
-                    <span>🗑️ Xóa Tất Cả</span>
-                </button>
-            </div>
-
-            <div id="statusMessage"></div>
+  <main>
+    <div class="hero">
+      <div class="eyebrow">Sổ tay dành cho lữ khách mới</div>
+      <h1>Trước khi bước qua<br>cánh cổng máy chủ</h1>
+      <p class="lede">Mọi lệnh, mọi luật lệ, và những công trình sẽ chờ bạn giữa hoang dã — gói gọn trong một cuốn cẩm nang duy nhất.</p>
+      <div class="versions">
+        <div class="version-card">
+          <div class="k">Minecraft: Java Edition</div>
+          <div class="v">26.1.2</div>
         </div>
-
-        <div id="results"></div>
-
-        <footer class="footer">
-            <p>Made with ❤️ by Claude | <a href="https://github.com" target="_blank">Deploy on GitHub Pages</a></p>
-            <p style="margin-top: 0.5rem; font-size: 0.85rem;">Công cụ miễn phí - Không lưu trữ dữ liệu</p>
-        </footer>
+        <div class="version-card">
+          <div class="k">Minecraft: Bedrock Edition</div>
+          <div class="v">1.21.90 — 1.21.130</div>
+        </div>
+      </div>
     </div>
 
-    <script>
-        let videoResults = [];
+    <section id="bat-dau">
+      <div class="section-head">
+        <span class="num">01</span>
+        <h2>Bắt đầu hành trình</h2>
+      </div>
+      <p class="section-intro">Kiểm tra phiên bản game trước khi kết nối — sai phiên bản là nguyên nhân phổ biến nhất khiến không vào được máy chủ.</p>
+      <div class="cmd-grid">
+        <div class="cmd-card">
+          <code>PC / Java Edition</code>
+          <div class="desc">Cập nhật launcher lên bản <b>26.1.2</b>. Vào <b>Multiplayer → Add Server</b> và dán địa chỉ IP được admin cung cấp.</div>
+        </div>
+        <div class="cmd-card">
+          <code>Bedrock (Điện thoại / Console / Win)</code>
+          <div class="desc">Hỗ trợ các bản từ <b>1.21.90</b> đến <b>1.21.130</b>. Nếu game tự cập nhật vượt mốc này, máy chủ có thể chưa tương thích — hỏi admin trước khi cập nhật.</div>
+        </div>
+      </div>
+      <div class="note-strip">
+        <b>Mẹo:</b> nếu không chắc bản Bedrock của mình có nằm trong khoảng hỗ trợ hay không, vào <i>Cài đặt → Giới thiệu</i> trong game để xem số phiên bản đầy đủ trước khi báo admin.
+      </div>
+    </section>
 
-        async function processVideos() {
-            const textarea = document.getElementById('urls');
-            const urls = textarea.value.trim().split('\n').filter(url => url.trim());
-            
-            if (urls.length === 0) {
-                showStatus('Vui lòng nhập ít nhất một link TikTok!', 'error');
-                return;
-            }
+    <section id="essentials">
+      <div class="section-head">
+        <span class="num">02</span>
+        <h2>Lệnh EssentialsX</h2>
+      </div>
+      <p class="section-intro">Bộ lệnh cơ bản để sinh hoạt, di chuyển và giao tiếp trên máy chủ.</p>
 
-            showStatus(`Đang xử lý ${urls.length} video...`, 'success');
-            showLoading(true);
-            
-            videoResults = [];
-            
-            for (let i = 0; i < urls.length; i++) {
-                try {
-                    const url = urls[i].trim();
-                    showStatus(`Đang tải video ${i + 1}/${urls.length}...`, 'success');
-                    
-                    const videoData = await downloadTikTok(url);
-                    if (videoData) {
-                        videoResults.push(videoData);
-                    }
-                } catch (error) {
-                    console.error('Error processing video:', error);
-                }
-                
-                // Delay giữa các requests để tránh rate limit
-                if (i < urls.length - 1) {
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                }
-            }
-            
-            showLoading(false);
-            
-            if (videoResults.length > 0) {
-                displayResults();
-                showStatus(`✅ Đã tải thành công ${videoResults.length}/${urls.length} video!`, 'success');
-            } else {
-                showStatus('❌ Không thể tải video. Vui lòng kiểm tra lại link!', 'error');
-            }
-        }
+      <div class="group-label">Di chuyển</div>
+      <div class="cmd-grid">
+        <div class="cmd-card"><code>/spawn</code><div class="desc">Dịch chuyển về điểm xuất phát chung của máy chủ.</div></div>
+        <div class="cmd-card"><code>/sethome [tên]</code><div class="desc">Đặt điểm nhà tại vị trí hiện tại. Có thể đặt nhiều nhà bằng cách đặt tên khác nhau.</div></div>
+        <div class="cmd-card"><code>/home [tên]</code><div class="desc">Dịch chuyển về nhà đã lưu.</div></div>
+        <div class="cmd-card"><code>/back</code><div class="desc">Quay lại vị trí trước khi dịch chuyển hoặc sau khi chết.</div></div>
+        <div class="cmd-card"><code>/warp [tên]</code><div class="desc">Dịch chuyển đến các điểm warp công cộng do admin thiết lập.</div></div>
+        <div class="cmd-card"><code>/tpa [người chơi]</code><div class="desc">Gửi yêu cầu dịch chuyển đến người chơi khác.</div></div>
+        <div class="cmd-card"><code>/tpaccept</code><div class="desc">Chấp nhận yêu cầu dịch chuyển vừa nhận được.</div></div>
+        <div class="cmd-card"><code>/tpdeny</code><div class="desc">Từ chối yêu cầu dịch chuyển.</div></div>
+      </div>
 
-        async function downloadTikTok(url) {
-            try {
-                // Sử dụng API công khai - TikTok Downloader API
-                const apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}&hd=1`;
-                
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                
-                if (data.code === 0 && data.data) {
-                    return {
-                        url: url,
-                        title: data.data.title || 'TikTok Video',
-                        author: data.data.author?.nickname || data.data.author?.unique_id || 'Unknown',
-                        thumbnail: data.data.cover || data.data.origin_cover,
-                        downloadUrl: data.data.hdplay || data.data.play,
-                        duration: data.data.duration,
-                        createTime: data.data.create_time
-                    };
-                }
-                
-                return null;
-            } catch (error) {
-                console.error('Error downloading TikTok:', error);
-                return null;
-            }
-        }
+      <div class="group-label">Giao tiếp</div>
+      <div class="cmd-grid">
+        <div class="cmd-card"><code>/msg [người chơi] [nội dung]</code><div class="desc">Nhắn tin riêng cho một người chơi cụ thể.</div></div>
+        <div class="cmd-card"><code>/reply [nội dung]</code><div class="desc">Trả lời tin nhắn riêng gần nhất.</div></div>
+        <div class="cmd-card"><code>/mail send [người chơi] [nội dung]</code><div class="desc">Gửi thư offline, người nhận sẽ thấy khi đăng nhập.</div></div>
+        <div class="cmd-card"><code>/ignore [người chơi]</code><div class="desc">Ẩn tin nhắn từ một người chơi gây phiền.</div></div>
+      </div>
 
-        function displayResults() {
-            const resultsDiv = document.getElementById('results');
-            
-            if (videoResults.length === 0) {
-                resultsDiv.innerHTML = '';
-                return;
-            }
-            
-            let html = `
-                <div class="main-card">
-                    <div class="results-header">
-                        <h2 class="results-title">📹 Kết quả (${videoResults.length} video)</h2>
-                        <button class="download-all-btn" onclick="downloadAll()">⬇️ Tải Tất Cả</button>
-                    </div>
-                    <div class="video-grid">
-            `;
-            
-            videoResults.forEach((video, index) => {
-                html += `
-                    <div class="video-card" style="animation-delay: ${index * 0.1}s">
-                        <img src="${video.thumbnail}" alt="${video.title}" class="video-thumbnail" loading="lazy">
-                        <div class="video-info">
-                            <h3 class="video-title">${video.title}</h3>
-                            <div class="video-meta">
-                                <span class="video-author">👤 ${video.author}</span>
-                                ${video.duration ? `<span>⏱️ ${formatDuration(video.duration)}s</span>` : ''}
-                            </div>
-                            <button class="download-btn" onclick="downloadSingle('${video.downloadUrl}', '${sanitizeFilename(video.title)}')">
-                                ⬇️ Tải Video HD
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            html += `
-                    </div>
-                </div>
-            `;
-            
-            resultsDiv.innerHTML = html;
-        }
+      <div class="group-label">Sinh hoạt</div>
+      <div class="cmd-grid">
+        <div class="cmd-card"><code>/afk</code><div class="desc">Đánh dấu bản thân đang vắng mặt tạm thời.</div></div>
+        <div class="cmd-card"><code>/nick [tên]</code><div class="desc">Đổi tên hiển thị trong chat (nếu được admin cho phép).</div></div>
+        <div class="cmd-card"><code>/balance</code><div class="desc">Xem số dư tiền tệ hiện có trên máy chủ.</div></div>
+        <div class="cmd-card"><code>/pay [người chơi] [số tiền]</code><div class="desc">Chuyển tiền cho người chơi khác.</div></div>
+        <div class="cmd-card"><code>/list</code><div class="desc">Xem danh sách người chơi đang online.</div></div>
+        <div class="cmd-card"><code>/rules</code><div class="desc">Xem lại nội quy máy chủ ngay trong game.</div></div>
+      </div>
+    </section>
 
-        async function downloadSingle(url, filename) {
-            try {
-                // Fetch video và tạo blob để force download
-                const response = await fetch(url);
-                const blob = await response.blob();
-                
-                const blobUrl = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = blobUrl;
-                a.download = `${filename}.mp4`;
-                
-                document.body.appendChild(a);
-                a.click();
-                
-                // Cleanup
-                setTimeout(() => {
-                    window.URL.revokeObjectURL(blobUrl);
-                    document.body.removeChild(a);
-                }, 100);
-                
-                return true;
-            } catch (error) {
-                console.error('Download error:', error);
-                // Fallback: direct link
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `${filename}.mp4`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                return false;
-            }
-        }
+    <section id="griefprevention">
+      <div class="section-head">
+        <span class="num">03</span>
+        <h2>Lệnh GriefPrevention</h2>
+      </div>
+      <p class="section-intro">Bảo vệ đất đai và công trình của bạn khỏi bị phá hoại — dùng cuốc vàng (Golden Shovel) để vẽ vùng claim.</p>
 
-        async function downloadAll() {
-            if (videoResults.length === 0) {
-                showStatus('Không có video nào để tải!', 'error');
-                return;
-            }
+      <div class="group-label">Claim đất</div>
+      <div class="cmd-grid">
+        <div class="cmd-card"><code>/claim</code><div class="desc">Xem hướng dẫn tạo claim bằng cuốc vàng: click 2 góc chéo nhau để khoanh vùng.</div></div>
+        <div class="cmd-card"><code>/abandonclaim</code><div class="desc">Huỷ claim đang đứng trong đó, trả lại đất cho vùng chung.</div></div>
+        <div class="cmd-card"><code>/abandonallclaims</code><div class="desc">Huỷ toàn bộ claim của bản thân cùng lúc.</div></div>
+        <div class="cmd-card"><code>/claiminfo</code><div class="desc">Xem thông tin claim đang đứng trong đó: chủ sở hữu, kích thước, người được trust.</div></div>
+        <div class="cmd-card"><code>/claimslist</code><div class="desc">Liệt kê tất cả claim thuộc sở hữu của bạn.</div></div>
+        <div class="cmd-card"><code>/subdivideclaims</code><div class="desc">Chuyển sang chế độ chia nhỏ một claim lớn thành các claim con (hữu ích khi làm nhà chung).</div></div>
+      </div>
 
-            const confirmed = confirm(`Bạn muốn tải ${videoResults.length} video?\n\nLưu ý: Trình duyệt có thể yêu cầu cho phép tải nhiều file.`);
-            if (!confirmed) return;
+      <div class="group-label">Cấp quyền cho bạn bè</div>
+      <div class="cmd-grid">
+        <div class="cmd-card"><code>/trust [người chơi]</code><div class="desc">Cho phép người chơi đó xây, phá, mở rương trong claim của bạn.</div></div>
+        <div class="cmd-card"><code>/untrust [người chơi]</code><div class="desc">Thu hồi quyền đã cấp trước đó.</div></div>
+        <div class="cmd-card"><code>/containertrust [người chơi]</code><div class="desc">Chỉ cho phép mở rương/tủ, không cho xây hoặc phá.</div></div>
+        <div class="cmd-card"><code>/accesstrust [người chơi]</code><div class="desc">Cho phép dùng cửa, đòn bẩy, nút bấm — không đụng vào rương hay block.</div></div>
+        <div class="cmd-card"><code>/permissiontrust [người chơi]</code><div class="desc">Cho phép người đó tự cấp quyền cho người khác trong claim (quyền quản lý).</div></div>
+        <div class="cmd-card"><code>/trustlist</code><div class="desc">Xem danh sách những ai đang được cấp quyền trong claim hiện tại.</div></div>
+      </div>
+    </section>
 
-            showStatus('Đang tải tất cả video... Vui lòng đợi!', 'success');
-            
-            let successCount = 0;
-            let failCount = 0;
-            
-            for (let i = 0; i < videoResults.length; i++) {
-                const video = videoResults[i];
-                const filename = sanitizeFilename(video.title) || `tiktok_video_${i+1}`;
-                
-                showStatus(`Đang tải video ${i + 1}/${videoResults.length}: ${video.title.substring(0, 30)}...`, 'success');
-                
-                try {
-                    const success = await downloadSingle(video.downloadUrl, filename);
-                    if (success) successCount++;
-                    else failCount++;
-                } catch (error) {
-                    failCount++;
-                    console.error(`Error downloading video ${i + 1}:`, error);
-                }
-                
-                // Delay giữa các downloads để tránh bị block
-                if (i < videoResults.length - 1) {
-                    await new Promise(resolve => setTimeout(resolve, 1500));
-                }
-            }
-            
-            showStatus(`✅ Hoàn thành! Đã tải: ${successCount}/${videoResults.length} video`, 'success');
-            
-            if (failCount > 0) {
-                setTimeout(() => {
-                    showStatus(`⚠️ ${failCount} video không tải được. Hãy thử tải riêng lẻ!`, 'error');
-                }, 3000);
-            }
-        }
+    <section id="theend">
+      <div class="section-head">
+        <span class="num">04</span>
+        <h2>Hiểm hoạ The End</h2>
+      </div>
+      <p class="section-intro">Trước khi bước qua cổng End, hãy đọc kỹ điều này.</p>
 
-        function sanitizeFilename(filename) {
-            return filename
-                .replace(/[^a-z0-9\s\-_]/gi, '')
-                .replace(/\s+/g, '_')
-                .substring(0, 100);
-        }
+      <div class="warning">
+        <div class="glyph">⚠</div>
+        <div>
+          <h3>Chết ở The End sẽ mất toàn bộ vật phẩm</h3>
+          <p>Khác với claim đất được GriefPrevention bảo vệ, <b>cái chết ở chiều không gian The End không được bảo vệ tương tự</b>. Nếu bạn tử trận tại đây (rơi vào hư không, bị Enderman, Shulker, hoặc rồng Ender tiêu diệt), toàn bộ đồ đạc mang theo sẽ rơi ra và có nguy cơ mất vĩnh viễn.</p>
+          <ul>
+            <li>Không mang theo đồ quý (kim cương, netherite, item enchant cao) khi chưa thật sự cần thiết.</li>
+            <li>Chuẩn bị kỹ trước khi đánh Ender Dragon: đồ ăn, mũi tên, giường (phát nổ gây sát thương lớn quanh Crystal).</li>
+            <li>Nếu bắt buộc phải chết, hãy cố gắng quay lại nhặt đồ càng sớm càng tốt — item có thể biến mất theo thời gian.</li>
+            <li>Cân nhắc dùng Ender Chest để cất đồ quan trọng trước khi vào cổng — Ender Chest không bị ảnh hưởng khi bạn chết.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
-        function formatDuration(seconds) {
-            return Math.floor(seconds);
-        }
+    <section id="ket-noi">
+      <div class="section-head">
+        <span class="num">05</span>
+        <h2>Kết nối máy chủ</h2>
+      </div>
+      <p class="section-intro">Địa chỉ máy chủ dùng chung cho cả hai nền tảng — chỉ khác cách nhập vào game.</p>
 
-        function showStatus(message, type) {
-            const statusDiv = document.getElementById('statusMessage');
-            statusDiv.innerHTML = `<div class="status-message status-${type}">${message}</div>`;
-            
-            setTimeout(() => {
-                statusDiv.innerHTML = '';
-            }, 5000);
-        }
+      <div class="ip-box">
+        <div class="k">Địa chỉ máy chủ</div>
+        <div class="v mono">mbasic3.pikamc.vn:25387</div>
+      </div>
 
-        function showLoading(show) {
-            const resultsDiv = document.getElementById('results');
-            
-            if (show) {
-                resultsDiv.innerHTML = `
-                    <div class="main-card loading">
-                        <div class="spinner"></div>
-                        <p>Đang xử lý video...</p>
-                    </div>
-                `;
-            } else {
-                if (videoResults.length === 0) {
-                    resultsDiv.innerHTML = '';
-                }
-            }
-        }
+      <div class="group-label">Java Edition (PC)</div>
+      <div class="cmd-grid">
+        <div class="cmd-card">
+          <code>Bước 1</code>
+          <div class="desc">Mở Minecraft Launcher, đảm bảo phiên bản đang chọn là <b>26.1.2</b>.</div>
+        </div>
+        <div class="cmd-card">
+          <code>Bước 2</code>
+          <div class="desc">Vào <b>Multiplayer → Add Server</b>.</div>
+        </div>
+        <div class="cmd-card">
+          <code>Bước 3</code>
+          <div class="desc">Ở ô <b>Server Address</b>, nhập chính xác: <code>mbasic3.pikamc.vn:25387</code></div>
+        </div>
+        <div class="cmd-card">
+          <code>Bước 4</code>
+          <div class="desc">Lưu lại và bấm <b>Join Server</b> để vào chơi.</div>
+        </div>
+      </div>
 
-        function clearAll() {
-            document.getElementById('urls').value = '';
-            document.getElementById('results').innerHTML = '';
-            document.getElementById('statusMessage').innerHTML = '';
-            videoResults = [];
-            showStatus('✅ Đã xóa tất cả!', 'success');
-        }
-    </script>
+      <div class="group-label">Bedrock Edition (Điện thoại / Console / Windows)</div>
+      <div class="cmd-grid">
+        <div class="cmd-card">
+          <code>Bước 1</code>
+          <div class="desc">Kiểm tra phiên bản game nằm trong khoảng hỗ trợ <b>1.21.90 – 1.21.130</b> (Cài đặt → Giới thiệu).</div>
+        </div>
+        <div class="cmd-card">
+          <code>Bước 2</code>
+          <div class="desc">Vào tab <b>Play → Servers</b>, kéo xuống cuối và bấm <b>Add Server</b>.</div>
+        </div>
+        <div class="cmd-card">
+          <code>Bước 3</code>
+          <div class="desc">Điền <b>Server Name</b> tuỳ ý, <b>Server Address</b> là <code>mbasic3.pikamc.vn</code>, và <b>Port</b> là <code>25387</code>.</div>
+        </div>
+        <div class="cmd-card">
+          <code>Bước 4</code>
+          <div class="desc">Lưu lại rồi bấm vào server vừa thêm trong danh sách để tham gia.</div>
+        </div>
+      </div>
+
+      <div class="note-strip">
+        <b>Lưu ý:</b> Bedrock và Java kết nối vào chung một thế giới nhờ cầu nối Geyser trên máy chủ. Nếu không vào được, kiểm tra lại đúng phiên bản game và đúng địa chỉ/port ở trên trước khi báo admin.
+      </div>
+    </section>
+
+    <footer>
+      <div class="display">Chúc lữ khách thượng lộ bình an</div>
+      <div>Có thắc mắc gì thêm, cứ hỏi admin trên Discord hoặc trong chat máy chủ.</div>
+    </footer>
+  </main>
+</div>
+
 </body>
 </html>
